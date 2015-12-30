@@ -4,7 +4,6 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var morgan = require('morgan');
 var mongoose = require('mongoose');
 
 var jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
@@ -13,6 +12,7 @@ var User = require('./app/models/user'); // get our mongoose model
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
+var api = require('./routes/api');
 
 var app = express();
 
@@ -32,11 +32,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 mongoose.connect(config.database); // connect to database
 app.set('superSecret', config.secret); // secret variable
 
-// use morgan to log requests to the console
-app.use(morgan('dev'));
 
 app.use('/', routes);
 app.use('/users', users);
+app.use('/api', api);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
