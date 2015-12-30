@@ -4,6 +4,12 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var morgan = require('morgan');
+var mongoose = require('mongoose');
+
+var jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
+var config = require('./config'); // get our config file
+var User = require('./app/models/user'); // get our mongoose model
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
@@ -21,6 +27,13 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+
+mongoose.connect(config.database); // connect to database
+app.set('superSecret', config.secret); // secret variable
+
+// use morgan to log requests to the console
+app.use(morgan('dev'));
 
 app.use('/', routes);
 app.use('/users', users);
